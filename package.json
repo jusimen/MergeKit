@@ -76,7 +76,7 @@
     "start": "npm run dev",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "version": "run-s prepare lint escheck test",
-    "postinstall": "npm run build"
+    "postinstall": "npm install --ignore-scripts && npm run build"
   },
   "devDependencies": {
     "browser-sync": "^3.0.2",
