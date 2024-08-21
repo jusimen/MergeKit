@@ -69,7 +69,7 @@
     "dev": "run-p serve 'build:js -- --watch' 'build:types -- --watch'",
     "clean": "rimraf coverage/* ./dist/*",
     "escheck": "es-check es2018 './dist/**/*.js' --module",
-    "lint": "prettier . --check && eslint . && ./markdownlint *.md ./docs/*.md --ignore node_modules",
+    "lint": "prettier . --check && eslint . && markdownlint *.md ./docs/*.md --ignore node_modules",
     "lint:fix": "prettier . --write && eslint . --fix",
     "prepare": "run-s clean build",
     "serve": "node server.js",
