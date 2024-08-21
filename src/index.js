@@ -497,11 +497,19 @@ export function mergician(optionsOrObject, ...objects) {
         const propDescriptor = Object.getOwnPropertyDescriptor(obj, key);
         const { configurable, enumerable, writable } = propDescriptor;
 
+        let value = [...new Set(obj[key])];
+
+        // Handle arrays of objects
+        if (Array.isArray(obj[key]) && typeof obj[key][0] === 'object') {
+          value = [...new Set(obj[key].map(item => JSON.stringify(item)))];
+          value = value.map(item => JSON.parse(item));
+        } 
+        
         // Set static value to handle arrays received from srcObj getter
         Object.defineProperty(obj, key, {
           configurable,
           enumerable,
-          value: [...new Set(obj[key])],
+          value: value,
           writable: writable !== undefined ? writable : true
         });
       }
