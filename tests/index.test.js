@@ -1,5 +1,5 @@
 import { isObject } from '../src/util.js';
-import { mergician } from '../src/index.js';
+import { mergekit } from '../src/index.js';
 
 // Test Objects
 // ============================================================================
@@ -60,7 +60,7 @@ const testPerson = Object.create(
 describe('Clone', () => {
   test('arrays', () => {
     const testObj = { a: [1, 1] };
-    const mergedObj = mergician({}, testObj);
+    const mergedObj = mergekit({}, testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -70,7 +70,7 @@ describe('Clone', () => {
 
   test('dates', () => {
     const testObj = { a: new Date() };
-    const mergedObj = mergician({}, testObj);
+    const mergedObj = mergekit({}, testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -80,7 +80,7 @@ describe('Clone', () => {
 
   test('object literals', () => {
     const testObj = { a: { b: 1 } };
-    const mergedObj = mergician({}, testObj);
+    const mergedObj = mergekit({}, testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -90,7 +90,7 @@ describe('Clone', () => {
 
   test('falsey values', () => {
     const testObj = { a: null, b: undefined, c: '', d: 0, e: false };
-    const mergedObj = mergician({}, testObj);
+    const mergedObj = mergekit({}, testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -98,7 +98,7 @@ describe('Clone', () => {
   });
 
   test('own properties', () => {
-    const mergedObj = mergician({}, testPerson);
+    const mergedObj = mergekit({}, testPerson);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testPerson);
 
@@ -106,7 +106,7 @@ describe('Clone', () => {
   });
 
   test('custom prototype properties', () => {
-    const mergedObj = mergician({}, testPerson);
+    const mergedObj = mergekit({}, testPerson);
     const mergedProto = Object.getPrototypeOf(mergedObj);
     const mergedProtoDescriptors =
       Object.getOwnPropertyDescriptors(mergedProto);
@@ -117,7 +117,7 @@ describe('Clone', () => {
   });
 
   test('circular object', () => {
-    const mergedObj = mergician({}, testObjCircular);
+    const mergedObj = mergekit({}, testObjCircular);
 
     expect(mergedObj.a).toBe(1);
     expect(mergedObj.circular.a).toBe(1);
@@ -128,7 +128,7 @@ describe('Clone', () => {
 
 describe('Merge', () => {
   test('deep two objects', () => {
-    const mergedObj = mergician(testObj1, testObj2);
+    const mergedObj = mergekit(testObj1, testObj2);
 
     expect(mergedObj.b).not.toBe(testObj2.b);
     expect(mergedObj.c).not.toBe(testObj2.c);
@@ -136,7 +136,7 @@ describe('Merge', () => {
   });
 
   test('deep three objects', () => {
-    const mergedObj = mergician(testObj1, testObj2, testObj3);
+    const mergedObj = mergekit(testObj1, testObj2, testObj3);
 
     expect(mergedObj).toMatchSnapshot();
   });
@@ -158,7 +158,7 @@ describe('Merge', () => {
       },
       Object.getOwnPropertyDescriptors({ bar: true })
     );
-    const mergedObj = mergician(testObj1, testObj2);
+    const mergedObj = mergekit(testObj1, testObj2);
 
     expect(mergedObj).toHaveProperty('foo');
     expect(mergedObj).toHaveProperty('bar');
@@ -169,14 +169,14 @@ describe('Merge', () => {
 
 describe('Options', () => {
   test('passing options returns custom merge function', () => {
-    const customMerge = mergician({}); // Defaults
+    const customMerge = mergekit({}); // Defaults
 
     expect(typeof customMerge).toBe('function');
   });
 
   describe('Keys', () => {
     test('onlyKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyKeys: ['a', 'c', 'x']
       })(testObj1, testObj2, testObj3);
 
@@ -184,7 +184,7 @@ describe('Options', () => {
     });
 
     test('skipKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipKeys: ['a', 'x']
       })(testObj1, testObj2, testObj3);
 
@@ -192,7 +192,7 @@ describe('Options', () => {
     });
 
     test('onlyKeys + skipKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyKeys: ['a', 'b'],
         skipKeys: ['b']
       })(testObj1, testObj2, testObj3);
@@ -201,7 +201,7 @@ describe('Options', () => {
     });
 
     test('onlyCommonKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyCommonKeys: true
       })(testObj1, testObj2, testObj3);
 
@@ -209,7 +209,7 @@ describe('Options', () => {
     });
 
     test('onlyCommonKeys + onlyKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyKeys: ['b', 'c', 'x', 'z'],
         onlyCommonKeys: true
       })(testObj1, testObj2, testObj3);
@@ -218,7 +218,7 @@ describe('Options', () => {
     });
 
     test('onlyCommonKeys + skipKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipKeys: ['a', 'z'],
         onlyCommonKeys: true
       })(testObj1, testObj2, testObj3);
@@ -227,7 +227,7 @@ describe('Options', () => {
     });
 
     test('onlyUniversalKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyUniversalKeys: true
       })(testObj1, testObj2, testObj3);
 
@@ -235,7 +235,7 @@ describe('Options', () => {
     });
 
     test('onlyUniversalKeys + onlyKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyKeys: ['a'],
         onlyUniversalKeys: true
       })(testObj1, testObj2, testObj3);
@@ -244,7 +244,7 @@ describe('Options', () => {
     });
 
     test('onlyUniversalKeys + skipKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipKeys: ['a'],
         onlyUniversalKeys: true
       })(testObj1, testObj2, testObj3);
@@ -253,7 +253,7 @@ describe('Options', () => {
     });
 
     test('skipCommonKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipCommonKeys: true
       })(testObj1, testObj2, testObj3);
 
@@ -261,7 +261,7 @@ describe('Options', () => {
     });
 
     test('skipCommonKeys + onlyKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyKeys: ['d'],
         skipCommonKeys: true
       })(testObj1, testObj2, testObj3);
@@ -270,7 +270,7 @@ describe('Options', () => {
     });
 
     test('skipCommonKeys + skipKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipKeys: ['d'],
         skipCommonKeys: true
       })(testObj1, testObj2, testObj3);
@@ -279,7 +279,7 @@ describe('Options', () => {
     });
 
     test('skipUniversalKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipUniversalKeys: true
       })(testObj1, testObj2, testObj3);
 
@@ -287,7 +287,7 @@ describe('Options', () => {
     });
 
     test('skipUniversalKeys + onlyKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onlyKeys: ['d'],
         skipUniversalKeys: true
       })(testObj1, testObj2, testObj3);
@@ -296,7 +296,7 @@ describe('Options', () => {
     });
 
     test('skipUniversalKeys + skipKeys', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipKeys: ['c'],
         skipUniversalKeys: true
       })(testObj1, testObj2, testObj3);
@@ -305,7 +305,7 @@ describe('Options', () => {
     });
 
     test('hoistEnumerable = false', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         hoistEnumerable: false
       })({}, testPerson);
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
@@ -316,7 +316,7 @@ describe('Options', () => {
     });
 
     test('hoistEnumerable = true', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         hoistEnumerable: true
       })({}, testPerson);
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
@@ -329,7 +329,7 @@ describe('Options', () => {
     });
 
     test('hoistProto = false', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         hoistProto: false
       })({}, testPerson);
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
@@ -340,7 +340,7 @@ describe('Options', () => {
     });
 
     test('hoistProto = true', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         hoistProto: true
       })({}, testPerson);
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
@@ -355,7 +355,7 @@ describe('Options', () => {
     });
 
     test('skipProto = false', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipProto: false
       })({}, testPerson);
       const mergedProto = Object.getPrototypeOf(mergedObj);
@@ -368,7 +368,7 @@ describe('Options', () => {
     });
 
     test('skipProto = true', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipProto: true
       })({}, testPerson);
       const mergedProto = Object.getPrototypeOf(mergedObj);
@@ -379,7 +379,7 @@ describe('Options', () => {
 
   describe('Values', () => {
     test('invokeGetters = false', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         invokeGetters: false
       })({}, testPerson);
       const getterDescriptor = Object.getOwnPropertyDescriptor(
@@ -392,7 +392,7 @@ describe('Options', () => {
     });
 
     test('invokeGetters = true', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         invokeGetters: true
       })({}, testPerson);
       const getterDescriptor = Object.getOwnPropertyDescriptor(
@@ -406,7 +406,7 @@ describe('Options', () => {
     });
 
     test('skipSetters = false', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipSetters: false
       })({}, testPerson);
       const setterDescriptor = Object.getOwnPropertyDescriptor(
@@ -422,7 +422,7 @@ describe('Options', () => {
     });
 
     test('skipSetters = true', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         skipSetters: true
       })({}, testPerson);
       const setterDescriptor = Object.getOwnPropertyDescriptor(
@@ -441,7 +441,7 @@ describe('Options', () => {
     const testObj3 = { a: [3, 3], b: [3, [3, 3]], c: { d: [3, 3, '😀'] } };
 
     test('appendArrays', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         appendArrays: true
       })(testObj1, testObj2, testObj3);
 
@@ -449,7 +449,7 @@ describe('Options', () => {
     });
 
     test('prependArrays', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         prependArrays: true
       })(testObj1, testObj2, testObj3);
 
@@ -457,7 +457,7 @@ describe('Options', () => {
     });
 
     test('dedupArrays', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         appendArrays: true,
         dedupArrays: true
       })({}, testObj2);
@@ -466,7 +466,7 @@ describe('Options', () => {
     });
 
     test('dedupArrays + appendArrays', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         appendArrays: true,
         dedupArrays: true
       })(testObj1, testObj2, testObj3);
@@ -475,7 +475,7 @@ describe('Options', () => {
     });
 
     test('dedupArrays + prependArrays', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         prependArrays: true,
         dedupArrays: true
       })(testObj1, testObj2, testObj3);
@@ -484,7 +484,7 @@ describe('Options', () => {
     });
 
     test('dedupArrays + afterEach (mergeVal should be deduped)', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         appendArrays: true,
         dedupArrays: true,
         afterEach({ mergeVal }) {
@@ -496,7 +496,7 @@ describe('Options', () => {
     });
 
     test('sortArrays with boolean', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         appendArrays: true,
         sortArrays: true
       })(testObj1, testObj2, testObj3);
@@ -505,7 +505,7 @@ describe('Options', () => {
     });
 
     test('sortArrays with function', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         appendArrays: true,
         sortArrays(a, b) {
           if (typeof b === 'number') {
@@ -525,7 +525,7 @@ describe('Options', () => {
         [3, 4],
         [1, 2, 3, 4]
       ];
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         appendArrays: true,
         sortArrays: true,
         afterEach({ mergeVal }) {
@@ -543,7 +543,7 @@ describe('Options', () => {
 
     test('filter() arguments', () => {
       const conditionsTested = [];
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         filter({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
           expect(isObject(srcObj)).toBe(true);
           expect(typeof key).toBe('string');
@@ -578,7 +578,7 @@ describe('Options', () => {
     });
 
     test('filter() true', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         filter({ key }) {
           return key === 'a';
         }
@@ -588,7 +588,7 @@ describe('Options', () => {
     });
 
     test('filter() false', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         filter({ key }) {
           return key !== 'a';
         }
@@ -598,7 +598,7 @@ describe('Options', () => {
     });
 
     test('filter() without return value', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         filter() {}
       })(testObj1, testObj2);
 
@@ -611,7 +611,7 @@ describe('Options', () => {
 
       const conditionsTested = [];
 
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         beforeEach({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
           expect(typeof depth).toBe('number');
           expect(typeof key).toBe('string');
@@ -646,7 +646,7 @@ describe('Options', () => {
     });
 
     test('beforeEach() with return value', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         beforeEach() {
           return 'baz';
         }
@@ -656,7 +656,7 @@ describe('Options', () => {
     });
 
     test('beforeEach() without return value', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         beforeEach() {}
       })(testObj1, testObj2);
 
@@ -669,7 +669,7 @@ describe('Options', () => {
 
       const conditionsTested = [];
 
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         afterEach({ depth, key, mergeVal, srcObj, targetObj }) {
           expect(typeof depth).toBe('number');
           expect(typeof key).toBe('string');
@@ -701,7 +701,7 @@ describe('Options', () => {
     });
 
     test('afterEach() return value', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         afterEach() {
           return 'baz';
         }
@@ -711,7 +711,7 @@ describe('Options', () => {
     });
 
     test('afterEach() without return value', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         afterEach() {}
       })(testObj1, testObj2);
 
@@ -719,7 +719,7 @@ describe('Options', () => {
     });
 
     test('onCircular() arguments', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onCircular({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
           expect(typeof depth).toBe('number');
           expect(typeof key).toBe('string');
@@ -734,7 +734,7 @@ describe('Options', () => {
     });
 
     test('onCircular() without return value', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onCircular() {}
       })({}, testObjCircular);
 
@@ -745,7 +745,7 @@ describe('Options', () => {
     });
 
     test('onCircular() with return value', () => {
-      const mergedObj = mergician({
+      const mergedObj = mergekit({
         onCircular() {
           return true;
         }
@@ -756,7 +756,7 @@ describe('Options', () => {
   });
 
   test('custom merge function accepts options', () => {
-    const customMerge1 = mergician({ onlyKeys: ['b'], appendArrays: true });
+    const customMerge1 = mergekit({ onlyKeys: ['b'], appendArrays: true });
 
     expect(typeof customMerge1).toBe('function');
 
@@ -786,7 +786,7 @@ describe('Accessors', () => {
         return 'bar';
       }
     };
-    const mergedObj = mergician(obj1, obj2);
+    const mergedObj = mergekit(obj1, obj2);
     const getDescriptor = Object.getOwnPropertyDescriptor(mergedObj, 'getVal');
 
     expect(typeof mergedObj.a).toBe('number');
@@ -808,7 +808,7 @@ describe('Accessors', () => {
         this.a = val;
       }
     };
-    const mergedObj = mergician(obj1, obj2);
+    const mergedObj = mergekit(obj1, obj2);
     const setDescriptor = Object.getOwnPropertyDescriptor(mergedObj, 'setVal');
 
     expect(typeof mergedObj.a).toBe('number');
@@ -835,7 +835,7 @@ describe('Accessors', () => {
         this.a = [val, val];
       }
     };
-    const mergedObj = mergician({
+    const mergedObj = mergekit({
       appendArrays: true,
       dedupArrays: true
     })(obj1, obj2);
@@ -872,7 +872,7 @@ describe('Accessors', () => {
         this.a = { x: 4 };
       }
     };
-    const mergedObj = mergician(obj1, obj2);
+    const mergedObj = mergekit(obj1, obj2);
 
     // Getter
     expect(isObject(mergedObj.getVal)).toBe(true);
@@ -889,7 +889,7 @@ describe('Accessors', () => {
 
   test('handles getter/setter return objects from callbacks', () => {
     const obj1 = { a: 1, b: 1, c: 1, d: 1 };
-    const mergedObj = mergician({
+    const mergedObj = mergekit({
       beforeEach({ key }) {
         if (key === 'a') {
           return {
@@ -981,7 +981,7 @@ describe('Handle arrays of objects', () => {
       ]
     };
 
-    const mergedObj = mergician({
+    const mergedObj = mergekit({
       dedupArrays: true,
       appendArrays: true
     })(obj1, obj2);
@@ -1002,7 +1002,7 @@ describe('Handle arrays of objects', () => {
       a: [{ id: 1, name: 'Alice' }]
     };
 
-    const mergedObj = mergician({ appendArrays: true })(obj1, obj2);
+    const mergedObj = mergekit({ appendArrays: true })(obj1, obj2);
 
     expect(mergedObj.a).toHaveLength(1); // Expecting 1 object
     expect(mergedObj.a).toEqual([{ id: 1, name: 'Alice' }]);
@@ -1016,7 +1016,7 @@ describe('Handle arrays of objects', () => {
       a: [4, 5, 6]
     };
 
-    const mergedObj = mergician({ appendArrays: true })(obj1, obj2);
+    const mergedObj = mergekit({ appendArrays: true })(obj1, obj2);
 
     expect(mergedObj.a).toHaveLength(6); // Expecting all values to be included
     expect(mergedObj.a).toEqual([1, 2, 3, 4, 5, 6]);
@@ -1047,7 +1047,7 @@ describe('onlyObjectWithKeyValues', () => {
       }
     ];
 
-    const mergedObj = mergician({
+    const mergedObj = mergekit({
       dedupArrays: true,
       appendArrays: true,
       onlyObjectWithKeyValues: [

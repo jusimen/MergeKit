@@ -1,18 +1,18 @@
-# Mergician
+# mergekit
 
-[![NPM](https://img.shields.io/npm/v/mergician.svg?style=flat-square)](https://www.npmjs.com/package/mergician)
-[![GitHub Workflow Status (main)](https://img.shields.io/github/actions/workflow/status/jhildenbiddle/mergician/test.yml?branch=main&label=checks&style=flat-square)](https://github.com/jhildenbiddle/mergician/actions?query=branch%3Amain+)
-[![Codacy code quality](https://img.shields.io/codacy/grade/9831274fda2341129b76ff3582ec0df5/main?style=flat-square)](https://app.codacy.com/gh/jhildenbiddle/mergician/dashboard?branch=main)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://github.com/jhildenbiddle/mergician/blob/main/LICENSE)
-[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/mergician/badge)](https://www.jsdelivr.com/package/npm/mergician)
+[![NPM](https://img.shields.io/npm/v/mergekit.svg?style=flat-square)](https://www.npmjs.com/package/mergekit)
+[![GitHub Workflow Status (main)](https://img.shields.io/github/actions/workflow/status/jhildenbiddle/mergekit/test.yml?branch=main&label=checks&style=flat-square)](https://github.com/jhildenbiddle/mergekit/actions?query=branch%3Amain+)
+[![Codacy code quality](https://img.shields.io/codacy/grade/9831274fda2341129b76ff3582ec0df5/main?style=flat-square)](https://app.codacy.com/gh/jhildenbiddle/mergekit/dashboard?branch=main)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://github.com/jhildenbiddle/mergekit/blob/main/LICENSE)
+[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/mergekit/badge)](https://www.jsdelivr.com/package/npm/mergekit)
 [![Sponsor this project](https://img.shields.io/static/v1?style=flat-square&label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/jhildenbiddle)
-[![Add a star on GitHub](https://img.shields.io/github/stars/jhildenbiddle/mergician?style=social)](https://github.com/jhildenbiddle/mergician)
+[![Add a star on GitHub](https://img.shields.io/github/stars/jhildenbiddle/mergekit?style=social)](https://github.com/jhildenbiddle/mergekit)
 
-Mergician is a uniquely flexible and light-weight utility for cloning and deep (recursive) merging of JavaScript objects.
+mergekit is a uniquely flexible and light-weight utility for cloning and deep (recursive) merging of JavaScript objects.
 
-Unlike native methods and other utilities, Mergician faithfully clones and merges objects by properly handling [descriptor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor) values, [accessor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors) functions, and prototype properties while offering advanced options for customizing the clone/merge process.
+Unlike native methods and other utilities, mergekit faithfully clones and merges objects by properly handling [descriptor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor) values, [accessor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors) functions, and prototype properties while offering advanced options for customizing the clone/merge process.
 
-?> Version 2.x contains new features and breaking changes (see the [Changelog](changelog) for details). Documentation for version 1.x is available [on GitHub](https://github.com/jhildenbiddle/mergician/blob/v1.0.3/docs/index.md).
+?> Version 2.x contains new features and breaking changes (see the [Changelog](changelog) for details). Documentation for version 1.x is available [on GitHub](https://github.com/jhildenbiddle/mergekit/blob/v1.0.3/docs/index.md).
 
 ## Features
 
@@ -47,10 +47,10 @@ Basic object cloning using default options:
 
 ```javascript
 // ES module shown. CommonJS module also available (see below).
-import { mergician } from 'mergician';
+import { mergekit } from 'mergekit';
 
 const obj1 = { a: [1, 1], b: { c: 1, d: 1 } };
-const clonedObj = mergician({}, obj1);
+const clonedObj = mergekit({}, obj1);
 
 // Results
 console.log(clonedObj); // { a: [1, 1], b: { c: 1, d: 1 } }
@@ -63,13 +63,13 @@ Advanced object merging using custom options:
 
 ```javascript
 // ES module shown. CommonJS module also available (see below).
-import { mergician } from 'mergician';
+import { mergekit } from 'mergekit';
 
 const obj1 = { a: [1, 1], b: { c: 1, d: 1 } };
 const obj2 = { a: [2, 2], b: { c: 2 } };
 const obj3 = { e: 3 };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   skipKeys: ['d'],
   appendArrays: true,
   dedupArrays: true,
@@ -90,43 +90,43 @@ console.log(mergedObj); // { a: [1, 2], b: { c: 2 }, hello: 'world' }
 **NPM**
 
 ```bash
-npm install mergician
+npm install mergekit
 ```
 
 ```javascript
 // ES module
-import { mergician } from 'mergician';
+import { mergekit } from 'mergekit';
 ```
 
 ```javascript
 // CommonJS module
-const { mergician } = require('mergician');
+const { mergekit } = require('mergekit');
 ```
 
 **CDN**
 
-Available on [jsdelivr](https://www.jsdelivr.com/package/npm/mergician) (below), [unpkg](https://unpkg.com/browse/mergician/), and other CDN services that auto-publish npm packages.
+Available on [jsdelivr](https://www.jsdelivr.com/package/npm/mergekit) (below), [unpkg](https://unpkg.com/browse/mergekit/), and other CDN services that auto-publish npm packages.
 
 ?> Note the `@` version lock in the URLs below. This prevents breaking changes in future releases from affecting your project and is therefore the safest method of loading dependencies from a CDN. When a new major version is released, you will need to manually update your CDN URLs by changing the version after the `@` symbol.
 
 ```javascript
 // ES module @ latest v2.x.x
-import { mergician } from 'https://cdn.jsdelivr.net/npm/mergician@2';
+import { mergekit } from 'https://cdn.jsdelivr.net/npm/mergekit@2';
 ```
 
 ## Usage
 
 ### Using the default options <!-- {docsify-ignore} -->
 
-To merge objects using the default [options](#options), pass two or more objects to `mergician()`. A new object will be returned and the source object(s) will remain unmodified.
+To merge objects using the default [options](#options), pass two or more objects to `mergekit()`. A new object will be returned and the source object(s) will remain unmodified.
 
 ```javascript
 const obj1 = { a: 1 };
 const obj2 = { b: [2, 2], c: { d: 2 } };
 const obj3 = { b: [3, 3], c: { e: 3 } };
 
-const clonedObj = mergician({}, obj1);
-const mergedObj = mergician(obj1, obj2, obj3);
+const clonedObj = mergekit({}, obj1);
+const mergedObj = mergekit(obj1, obj2, obj3);
 
 console.log(clonedObj); // { a: 1 }
 console.log(clonedObj === obj1); // false
@@ -135,18 +135,18 @@ console.log(mergedObj); // { a: 1, b: [3, 3], c: { d: 2, e: 3 } }
 
 ### Specifying custom options <!-- {docsify-ignore} -->
 
-To specify merge [options](#options), pass a single object containing custom options to `mergician()`. A custom merge function with the options applied will be returned, which can then be immediately invoked by passing two or more objects to be merged.
+To specify merge [options](#options), pass a single object containing custom options to `mergekit()`. A custom merge function with the options applied will be returned, which can then be immediately invoked by passing two or more objects to be merged.
 
 ```javascript
 const obj1 = { a: 1 };
 const obj2 = { b: [2, 2], c: { d: 2 } };
 const obj3 = { b: [3, 3], c: { e: 3 } };
 
-const clonedObj = mergician({
+const clonedObj = mergekit({
   skipKeys: ['c']
 })({}, obj2);
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   appendArrays: true,
   dedupArrays: true
 })(obj1, obj2, obj3);
@@ -157,14 +157,14 @@ console.log(mergedObj); // { a: 1, b: [2, 3], c: { d: 2, e: 3 } }
 
 ### Using a named custom merge function <!-- {docsify-ignore} -->
 
-To create a reusable custom merge function, pass a single [options](#options) object to mergician and assign a name to the function returned. This new function behaves exactly as `mergician()` does but with its default values set to the the custom options used to create it.
+To create a reusable custom merge function, pass a single [options](#options) object to mergekit and assign a name to the function returned. This new function behaves exactly as `mergekit()` does but with its default values set to the the custom options used to create it.
 
 ```javascript
 const obj1 = { a: 1 };
 const obj2 = { b: [2, 2], c: { d: 2 } };
 const obj3 = { b: [3, 3], c: { e: 3 } };
 
-const customMerge = mergician({
+const customMerge = mergekit({
   appendArrays: true,
   dedupArrays: true
 });
@@ -230,7 +230,7 @@ const obj1 = { a: 1 };
 const obj2 = { b: { c: 2 } };
 const obj3 = { b: { d: 3 } };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   onlyKeys: ['a', 'b', 'c']
 })(obj1, obj2, obj3);
 
@@ -249,7 +249,7 @@ const obj1 = { a: 1 };
 const obj2 = { b: { c: 2 } };
 const obj3 = { b: { d: 3 } };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   skipKeys: ['c']
 })(obj1, obj2, obj3);
 
@@ -268,7 +268,7 @@ const obj1 = { a: 1 };
 const obj2 = { a: 2, b: { c: 2 } };
 const obj3 = { a: 3, b: { c: 3, d: 3 }, e: 3 };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   onlyCommonKeys: true
 })(obj1, obj2, obj3);
 
@@ -287,7 +287,7 @@ const obj1 = { a: 1 };
 const obj2 = { a: 2, b: { c: 2 } };
 const obj3 = { a: 3, b: { c: 3, d: 3 }, e: 3 };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   onlyUniversalKeys: true
 })(obj1, obj2, obj3);
 
@@ -306,7 +306,7 @@ const obj1 = { a: 1 };
 const obj2 = { a: 2, b: { c: 2 } };
 const obj3 = { a: 3, b: { c: 3, d: 3 }, e: 3 };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   skipCommonKeys: true
 })(obj1, obj2, obj3);
 
@@ -325,7 +325,7 @@ const obj1 = { a: 1 };
 const obj2 = { a: 2, b: { c: 2 } };
 const obj3 = { a: 3, b: { c: 3, d: 3 }, e: 3 };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   skipUniversalKeys: true
 })(obj1, obj2, obj3);
 
@@ -346,8 +346,8 @@ const obj1 = {
     return this.a + 1;
   }
 };
-const clonedObj1 = mergician({}, obj1);
-const clonedObj2 = mergician({
+const clonedObj1 = mergekit({}, obj1);
+const clonedObj2 = mergekit({
   invokeGetters: true
 })({}, obj1);
 
@@ -371,7 +371,7 @@ const obj1 = {
         return this.fullname = `${this.firstname} ${this.lastname}`;
     }
 };
-const clonedObj = mergician({
+const clonedObj = mergekit({
     skipSetters: true
 })({}, obj1);
 
@@ -391,7 +391,7 @@ const obj1 = { a: [1, 1] };
 const obj2 = { a: [2, 2] };
 const obj3 = { a: [3, 3] };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   appendArrays: true
 })(obj1, obj2, obj3);
 
@@ -410,7 +410,7 @@ const obj1 = { a: [1, 1] };
 const obj2 = { a: [2, 2] };
 const obj3 = { a: [3, 3] };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   prependArrays: true
 })(obj1, obj2, obj3);
 
@@ -429,10 +429,10 @@ const obj1 = { a: [1, 1] };
 const obj2 = { a: [2, 2] };
 const obj3 = { a: [3, 3] };
 
-const clonedObj = mergician({
+const clonedObj = mergekit({
   dedupArrays: true
 })({}, obj1);
-const mergedObj = mergician({
+const mergedObj = mergekit({
   appendArrays: true,
   dedupArrays: true
 })(obj1, obj2, obj3);
@@ -455,11 +455,11 @@ const obj1 = { a: [1, 4] };
 const obj2 = { a: [2, 5] };
 const obj3 = { a: [3, 6] };
 
-const mergedAscending = mergician({
+const mergedAscending = mergekit({
   appendArrays: true,
   sortArrays: true
 })(obj1, obj2, obj3);
-const mergedDescending = mergician({
+const mergedDescending = mergekit({
   appendArrays: true,
   sortArrays(a, b) {
     return b - a;
@@ -483,7 +483,7 @@ const obj = { a: 1 };
 console.log(obj); // { a: 1 }
 console.log(Object.getPrototypeOf(obj)); // { b: 2 }
 
-const clonedObj = mergician({
+const clonedObj = mergekit({
   hoistEnumerable: true
 })({}, obj);
 
@@ -516,7 +516,7 @@ console.log(John.greeting()); // My name is John.
 console.log(John.hasOwnProperty('greeting')); // false
 console.log(Object.getPrototypeOf(John).hasOwnProperty('greeting')); // true
 
-const cloneObj = mergician({
+const cloneObj = mergekit({
   hoistProto: true
 })({}, John);
 
@@ -550,7 +550,7 @@ console.log(John); // { name: 'John' };
 console.log(John.greeting()); // My name is John.
 console.log(Object.getPrototypeOf(John).hasOwnProperty('greeting')); // true
 
-const cloneObj = mergician({
+const cloneObj = mergekit({
   skipProto: true
 })({}, John);
 
@@ -586,7 +586,7 @@ const obj1 = { a: true };
 const obj2 = { a: false, b: true };
 const obj3 = { a: null, b: undefined, c: { d: 0, e: '' } };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   // Skip properties with non-zero "falsy" values
   filter({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
     return Boolean(srcVal) || srcVal === 0;
@@ -623,7 +623,7 @@ const obj1 = { a: null };
 const obj2 = { b: undefined };
 const obj3 = { c: { d: '', e: 0 } };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   // Normalize non-zero "falsy" values to be false
   beforeEach({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
     if (srcVal !== 0 && !Boolean(srcVal)) {
@@ -660,7 +660,7 @@ const obj1 = { a: 1 };
 const obj2 = { b: 2 };
 const obj3 = { c: { d: 3, e: true } };
 
-const mergedObj = mergician({
+const mergedObj = mergekit({
   // Add 1 to all numbers
   afterEach({ depth, key, mergeVal, srcObj, targetObj }) {
     if (typeof mergeVal === 'number') {
@@ -701,7 +701,7 @@ const circularObj = {
     return this;
   }
 };
-const clonedObj = mergician({
+const clonedObj = mergekit({
   // Replace circular object reference with '[Circular]' string
   onCircular({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
     return '[Circular]';
@@ -724,12 +724,12 @@ Thank you! 🙏🏻
 ## Contact & Support
 
 - Follow 👨🏻‍💻 **@jhildenbiddle** on [Twitter](https://twitter.com/jhildenbiddle) and [GitHub](https://github.com/jhildenbiddle) for announcements
-- Create a 💬 [GitHub issue](https://github.com/jhildenbiddle/mergician/issues) for bug reports, feature requests, or questions
-- Add a ⭐️ [star on GitHub](https://github.com/jhildenbiddle/mergician) and 🐦 [tweet](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fjhildenbiddle%2Fmergician&hashtags=developers,frontend,javascript) to promote the project
+- Create a 💬 [GitHub issue](https://github.com/jhildenbiddle/mergekit/issues) for bug reports, feature requests, or questions
+- Add a ⭐️ [star on GitHub](https://github.com/jhildenbiddle/mergekit) and 🐦 [tweet](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fjhildenbiddle%2Fmergekit&hashtags=developers,frontend,javascript) to promote the project
 - Become a 💖 [sponsor](https://github.com/sponsors/jhildenbiddle) to support the project and future efforts
 
 ## License
 
-This project is licensed under the [MIT license](https://github.com/jhildenbiddle/mergician/blob/main/LICENSE).
+This project is licensed under the [MIT license](https://github.com/jhildenbiddle/mergekit/blob/main/LICENSE).
 
 Copyright (c) John Hildenbiddle ([@jhildenbiddle](https://twitter.com/jhildenbiddle))

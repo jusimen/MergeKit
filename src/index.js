@@ -9,7 +9,7 @@ import {
 } from './util.js';
 
 /**
- * @typedef {Object} MergicianOptions
+ * @typedef {Object} mergekitOptions
  * @property {string[]} [onlyKeys] - Exclusive array of keys to be merged
  * (others are skipped)
  * @property {string[]} [skipKeys] - Array of keys to skip (others are
@@ -137,18 +137,18 @@ const defaults = {
  *
  * @example
  * // Custom merge options
- * const mergedObj = mergician({
+ * const mergedObj = mergekit({
  *   // Options
  * })(obj1, obj2, obj3);
  *
  * // Custom merge function
- * const customMerge = mergician({
+ * const customMerge = mergekit({
  *   // Options
  * });
  * const customMergeObj = customMerge(obj1, obj2, obj3);
  *
  * @overload
- * @param {MergicianOptions} options
+ * @param {mergekitOptions} options
  * @returns {function} New merge function with options set as defaults
  * @preserve
  */
@@ -159,10 +159,10 @@ const defaults = {
  *
  * @example
  * // Clone with default options
- * const clonedObj = mergician({}, obj1);
+ * const clonedObj = mergekit({}, obj1);
  *
  * // Merge with default options
- * const mergedObj = mergician(obj1, obj2, obj3);
+ * const mergedObj = mergekit(obj1, obj2, obj3);
  *
  * @overload
  * @param {...object} objects
@@ -176,30 +176,30 @@ const defaults = {
  *
  * @example
  * // Clone with default options
- * const clonedObj = mergician({}, obj1);
+ * const clonedObj = mergekit({}, obj1);
  *
  * // Merge with default options
- * const mergedObj = mergician(obj1, obj2, obj3);
+ * const mergedObj = mergekit(obj1, obj2, obj3);
  *
  * @example
  * // Custom merge options
- * const mergedObj = mergician({
+ * const mergedObj = mergekit({
  *   // Options
  * })(obj1, obj2, obj3);
  *
  * // Custom merge function
- * const customMerge = mergician({
+ * const customMerge = mergekit({
  *   // Options
  * });
  * const customMergeObj = customMerge(obj1, obj2, obj3);
  *
- * @param {MergicianOptions} optionsOrObject
+ * @param {mergekitOptions} optionsOrObject
  * @param {...object} [objects]
  * @returns {function|object} New merge function with options set as defaults
  * (single argument) or new merged object (multiple arguments)
  * @preserve
  */
-export function mergician(optionsOrObject, ...objects) {
+export function mergekit(optionsOrObject, ...objects) {
   const options = arguments.length === 1 ? arguments[0] : {};
   const settings = { ...defaults, ...options };
   const dedupArrayMap = new Map();
@@ -218,7 +218,7 @@ export function mergician(optionsOrObject, ...objects) {
     return getObjectKeys(obj, settings.hoistEnumerable);
   }
 
-  function _mergician(...objects) {
+  function _mergekit(...objects) {
     let mergeKeyList;
 
     if (objects.length > 1) {
@@ -421,9 +421,9 @@ export function mergician(optionsOrObject, ...objects) {
           mergeDepth++;
 
           if (isObject(targetVal)) {
-            mergeVal = _mergician(targetVal, mergeVal);
+            mergeVal = _mergekit(targetVal, mergeVal);
           } else {
-            mergeVal = _mergician(mergeVal);
+            mergeVal = _mergekit(mergeVal);
           }
 
           mergeDepth--;
@@ -557,10 +557,10 @@ export function mergician(optionsOrObject, ...objects) {
       }, []);
 
       if (customProtos.length) {
-        const newObjProto = _mergician(...customProtos);
+        const newObjProto = _mergekit(...customProtos);
 
         if (settings.hoistProto) {
-          newObj = _mergician(newObjProto, newObjProps);
+          newObj = _mergekit(newObjProto, newObjProps);
         } else {
           newObj = Object.create(
             newObjProto,
@@ -574,20 +574,20 @@ export function mergician(optionsOrObject, ...objects) {
   }
 
   // With options
-  // Ex: mergician({...})
+  // Ex: mergekit({...})
   if (arguments.length === 1) {
     return function (...objects) {
       // Options passed to custom merge function
       if (arguments.length === 1) {
-        return mergician({ ...settings, ...objects[0] });
+        return mergekit({ ...settings, ...objects[0] });
       } else {
-        return _mergician(...objects);
+        return _mergekit(...objects);
       }
     };
   }
   // Without options
-  // Ex: mergician(obj1, obj2);
+  // Ex: mergekit(obj1, obj2);
   else {
-    return _mergician(...arguments);
+    return _mergekit(...arguments);
   }
 }

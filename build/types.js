@@ -4,7 +4,7 @@ import path from 'node:path';
 
 const isWatch = process.argv.includes('--watch');
 const src = path.parse('./src/index.js');
-const out = path.parse('./dist/mergician.d.ts');
+const out = path.parse('./dist/mergekit.d.ts');
 
 function build() {
   // Generated files

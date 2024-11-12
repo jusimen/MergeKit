@@ -44,7 +44,7 @@ const baseConfig = {
   legalComments: 'inline',
   plugins: [buildPlugin],
   target: ['esnext'],
-  outfile: 'dist/mergician.EXT'
+  outfile: 'dist/mergekit.EXT'
 };
 
 const cjs = {

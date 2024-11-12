@@ -4,6 +4,7 @@
 
 _2024-11-12_
 
+- ❗️ Breaking: Refactor to new package name `MergeKit`
 - Merge nested object arrays
 - Add `onlyObjectWithKeyValues` option
 
@@ -32,7 +33,7 @@ _2024-11-12_
     }
   ];
 
-  mergician({
+  mergekit({
     dedupArrays: true,
     appendArrays: true,
     onlyObjectWithKeyValues: [

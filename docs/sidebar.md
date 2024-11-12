@@ -1,6 +1,6 @@
 - [Documentation](/) <!-- markdownlint-disable-line first-line-heading -->
 - [Changelog](changelog)
 - **Links**
-- [![Github](assets/img/github.svg)Github](https://github.com/jhildenbiddle/mergician)
-- [![NPM](assets/img/npm.svg)NPM](https://www.npmjs.com/package/mergician)
+- [![Github](assets/img/github.svg)Github](https://github.com/jhildenbiddle/mergekit)
+- [![NPM](assets/img/npm.svg)NPM](https://www.npmjs.com/package/mergekit)
 - [![Twitter](assets/img/twitter.svg)@jhildenbiddle](http://twitter.com/jhildenbiddle)

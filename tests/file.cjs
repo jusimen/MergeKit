@@ -1,8 +1,8 @@
-const { mergician } = require('../dist/mergician.cjs');
+const { mergekit } = require('../dist/mergekit.cjs');
 
 // Use for JSDoc / IntelliSense testing
-mergician;
-mergician({
+mergekit;
+mergekit({
   afterEach({}) {
     return true;
   },
@@ -10,4 +10,4 @@ mergician({
     return true;
   }
 });
-mergician({}, { a: 1 });
+mergekit({}, { a: 1 });

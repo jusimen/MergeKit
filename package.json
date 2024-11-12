@@ -1,16 +1,16 @@
 {
-  "name": "mergician",
+  "name": "mergekit",
   "version": "2.0.3",
   "description": "Uniquely flexible and light-weight utility for cloning and deep (recursive) merging of JavaScript objects. Supports descriptor values, accessor functions, and custom prototypes. Provides advanced options for customizing the clone/merge process.",
   "author": "Josue Monteiro",
   "license": "MIT",
-  "homepage": "https://github.com/jusimen/mergician#readme",
+  "homepage": "https://github.com/jusimen/mergekit#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jusimen/mergician.git"
+    "url": "git+https://github.com/jusimen/mergekit.git"
   },
   "bugs": {
-    "url": "https://github.com/jusimen/mergician/issues"
+    "url": "https://github.com/jusimen/mergekit/issues"
   },
   "keywords": [
     "deep",
@@ -50,15 +50,15 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/mergician.cjs",
-  "module": "./dist/mergician.esm.js",
-  "browser": "./dist/mergician.esm.min.js",
-  "types": "./dist/mergician.d.ts",
+  "main": "./dist/mergekit.cjs",
+  "module": "./dist/mergekit.esm.js",
+  "browser": "./dist/mergekit.esm.min.js",
+  "types": "./dist/mergekit.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/mergician.esm.js",
-      "require": "./dist/mergician.cjs",
-      "types": "./dist/mergician.d.ts"
+      "import": "./dist/mergekit.esm.js",
+      "require": "./dist/mergekit.cjs",
+      "types": "./dist/mergekit.d.ts"
     }
   },
   "sideEffects": false,

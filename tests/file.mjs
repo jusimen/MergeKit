@@ -1,8 +1,8 @@
-import { mergician } from '../dist/mergician.esm.js';
+import { mergekit } from '../dist/mergekit.esm.js';
 
 // Use for JSDoc / IntelliSense testing
-mergician;
-mergician({
+mergekit;
+mergekit({
   afterEach({}) {
     return true;
   },
@@ -10,4 +10,4 @@ mergician({
     return true;
   }
 });
-mergician({}, { a: 1 });
+mergekit({}, { a: 1 });
