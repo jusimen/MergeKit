@@ -22,6 +22,8 @@ import {
  * multiple objects (merge only single occurrence keys)
  * @property {boolean} [skipUniversalKeys=false] - Skip keys found in
  * all objects (merge only common keys)
+ * @property {{key: string, value: any}[]} [onlyObjectWithKeyValues] - Merge only objects
+ * that have the key and value pair
  * @property {boolean} [invokeGetters=false] - Invoke "getter" methods
  * and merge returned values
  * @property {boolean} [skipSetters=false] - Skip "setter" methods
@@ -107,6 +109,7 @@ const defaults = {
   onlyUniversalKeys: false,
   skipCommonKeys: false,
   skipUniversalKeys: false,
+
   // Values
   invokeGetters: false,
   skipSetters: false,
@@ -123,7 +126,8 @@ const defaults = {
   filter: Function.prototype,
   beforeEach: Function.prototype,
   afterEach: Function.prototype,
-  onCircular: Function.prototype
+  onCircular: Function.prototype,
+  onlyObjectWithKeyValues: []
 };
 
 /**
@@ -254,6 +258,22 @@ export function mergician(optionsOrObject, ...objects) {
 
       if (settings.skipKeys.length) {
         keys = keys.filter(key => settings.skipKeys.indexOf(key) === -1);
+      }
+
+      if (settings.onlyObjectWithKeyValues.length > 0) {
+        const hasValue = settings.onlyObjectWithKeyValues.every(
+          ({ key, value }) => {
+            if (!Object.keys(srcObj).includes(key)) {
+              return true;
+            }
+
+            return srcObj[key] === value;
+          }
+        );
+
+        if (!hasValue) {
+          return targetObj;
+        }
       }
 
       for (let i = 0; i < keys.length; i++) {

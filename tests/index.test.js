@@ -965,3 +965,103 @@ describe('Accessors', () => {
     expect(mergedObj).toMatchSnapshot();
   });
 });
+
+describe('Handle arrays of objects', () => {
+  test('merges arrays of objects without duplicates', () => {
+    const obj1 = {
+      a: [
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' }
+      ]
+    };
+    const obj2 = {
+      a: [
+        { id: 1, name: 'Alice' },
+        { id: 3, name: 'Charlie' }
+      ]
+    };
+
+    const mergedObj = mergician({
+      dedupArrays: true,
+      appendArrays: true
+    })(obj1, obj2);
+
+    expect(mergedObj.a).toHaveLength(3); // Expecting 3 unique objects
+    expect(mergedObj.a).toEqual([
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' },
+      { id: 3, name: 'Charlie' }
+    ]);
+  });
+
+  test('handles empty arrays correctly', () => {
+    const obj1 = {
+      a: []
+    };
+    const obj2 = {
+      a: [{ id: 1, name: 'Alice' }]
+    };
+
+    const mergedObj = mergician({ appendArrays: true })(obj1, obj2);
+
+    expect(mergedObj.a).toHaveLength(1); // Expecting 1 object
+    expect(mergedObj.a).toEqual([{ id: 1, name: 'Alice' }]);
+  });
+
+  test('handles arrays with non-object values', () => {
+    const obj1 = {
+      a: [1, 2, 3]
+    };
+    const obj2 = {
+      a: [4, 5, 6]
+    };
+
+    const mergedObj = mergician({ appendArrays: true })(obj1, obj2);
+
+    expect(mergedObj.a).toHaveLength(6); // Expecting all values to be included
+    expect(mergedObj.a).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+});
+
+describe('onlyObjectWithKeyValues', () => {
+  test('onlyObjectWithKeyValues', () => {
+    const objs = [
+      { action: 'read', domain: 'movies', id: '123' },
+      {
+        action: 'read',
+        resource: { director: ['Christopher Nolan'] },
+        domain: 'movies',
+        id: '345'
+      },
+      {
+        action: 'read',
+        resource: { director: ['Quentin Tarantino'] },
+        domain: 'movies',
+        id: '7890'
+      },
+      {
+        action: 'write',
+        resource: { director: ['James Cameron'] },
+        domain: 'movies',
+        id: '9999'
+      }
+    ];
+
+    const mergedObj = mergician({
+      dedupArrays: true,
+      appendArrays: true,
+      onlyObjectWithKeyValues: [
+        { key: 'domain', value: 'movies' },
+        { key: 'action', value: 'read' }
+      ]
+    })(...objs);
+
+    expect(mergedObj.id).not.toBe('9999');
+    expect(mergedObj.action).toBe('read');
+    expect(mergedObj.domain).toBe('movies');
+    expect(mergedObj.resource.director).toEqual([
+      'Christopher Nolan',
+      'Quentin Tarantino'
+    ]);
+  });
+});

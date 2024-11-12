@@ -1,5 +1,59 @@
 # Change Log
 
+## 2.0.3
+
+_2024-11-12_
+
+- Merge nested object arrays
+- Add `onlyObjectWithKeyValues` option
+    > Only merge properties that match the **key/value** pairs specified in the array, for example:
+    ```js
+    const objs = [
+      { action: 'read', domain: 'movies', id: '123' },
+      {
+        action: 'read',
+        resource: { director: ['Christopher Nolan'] },
+        domain: 'movies',
+        id: '345'
+      },
+      {
+        action: 'read',
+        resource: { director: ['Quentin Tarantino'] },
+        domain: 'movies',
+        id: '7890'
+      },
+      {
+        action: 'write',
+        resource: { director: ['James Cameron'] },
+        domain: 'movies',
+        id: '9999'
+      }
+    ];
+
+    mergician({
+      dedupArrays: true,
+      appendArrays: true,
+      onlyObjectWithKeyValues: [
+        { key: 'domain', value: 'movies' },
+        { key: 'action', value: 'read' }
+      ]
+    })(...objs);
+    ```
+
+    **Output:**
+    ```json
+    {
+      "action": "read",
+      "domain": "movies",
+      "resource": { 
+        "director": [
+          "Christopher Nolan",
+          "Quentin Tarantino"
+        ]
+      }
+    }
+    ```
+
 ## 2.0.2
 
 _2024-05-05_
