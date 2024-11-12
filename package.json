@@ -2,15 +2,15 @@
   "name": "mergician",
   "version": "2.0.2",
   "description": "Uniquely flexible and light-weight utility for cloning and deep (recursive) merging of JavaScript objects. Supports descriptor values, accessor functions, and custom prototypes. Provides advanced options for customizing the clone/merge process.",
-  "author": "John Hildenbiddle",
+  "author": "Josue Monteiro",
   "license": "MIT",
-  "homepage": "https://jhildenbiddle.github.io/mergician/",
+  "homepage": "https://github.com/jusimen/mergician#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://jhildenbiddle@github.com/jhildenbiddle/mergician.git"
+    "url": "git+https://github.com/jusimen/mergician.git"
   },
   "bugs": {
-    "url": "https://github.com/jhildenbiddle/mergician/issues"
+    "url": "https://github.com/jusimen/mergician/issues"
   },
   "keywords": [
     "deep",
@@ -75,6 +75,7 @@
     "serve": "node server.js",
     "start": "npm run dev",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "coverage": "npm run test -- --coverage",
     "version": "run-s prepare lint escheck test"
   },
   "devDependencies": {

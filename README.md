@@ -1,11 +1,11 @@
 # Mergician
 
-[![NPM](https://img.shields.io/npm/v/mergician.svg?style=flat-square)](https://www.npmjs.com/package/mergician)
-[![GitHub Workflow Status (main)](https://img.shields.io/github/actions/workflow/status/jhildenbiddle/mergician/test.yml?branch=main&label=checks&style=flat-square)](https://github.com/jhildenbiddle/mergician/actions?query=branch%3Amain+)
-[![Codacy code quality](https://img.shields.io/codacy/grade/9831274fda2341129b76ff3582ec0df5/main?style=flat-square)](https://app.codacy.com/gh/jhildenbiddle/mergician/dashboard?branch=main)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://github.com/jhildenbiddle/mergician/blob/main/LICENSE)
-[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/mergician/badge)](https://www.jsdelivr.com/package/npm/mergician)
-[![Sponsor this project](https://img.shields.io/static/v1?style=flat-square&label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/jhildenbiddle)
+## Introductory Note
+
+> This repository is a fork of [mergician](https://github.com/jhildenbiddle/mergician) with the goal of making it available on npm and updating with new features.<br>
+> A huge thanks to [John Hildenbiddle](https://github.com/jhildenbiddle) for creating such a great utility! 🎉
+
+## About
 
 Mergician is a uniquely flexible and light-weight utility for cloning and deep (recursive) merging of JavaScript objects.
 
@@ -115,25 +115,16 @@ import { mergician } from 'https://cdn.jsdelivr.net/npm/mergician@2';
 
 ## Usage & Options
 
-See the [documentation site](https://jhildenbiddle.github.io/mergician/) for details.
-
-## Sponsorship
-
-A [sponsorship](https://github.com/sponsors/jhildenbiddle) is more than just a way to show appreciation for the open-source authors and projects we rely on; it can be the spark that ignites the next big idea, the inspiration to create something new, and the motivation to share so that others may benefit.
-
-If you benefit from this project, please consider lending your support and encouraging future efforts by [becoming a sponsor](https://github.com/sponsors/jhildenbiddle).
-
-Thank you! 🙏🏻
+See the [documentation site](https://jusimen.github.io/mergician/) for details.
 
 ## Contact & Support
 
-- Follow 👨🏻‍💻 **@jhildenbiddle** on [Twitter](https://twitter.com/jhildenbiddle) and [GitHub](https://github.com/jhildenbiddle) for announcements
-- Create a 💬 [GitHub issue](https://github.com/jhildenbiddle/mergician/issues) for bug reports, feature requests, or questions
-- Add a ⭐️ [star on GitHub](https://github.com/jhildenbiddle/mergician) and 🐦 [tweet](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fjhildenbiddle%2Fmergician&hashtags=developers,frontend,javascript) to promote the project
-- Become a 💖 [sponsor](https://github.com/sponsors/jhildenbiddle) to support the project and future efforts
+- Follow 👨🏻‍💻 **@jusimen** on [Twitter](https://twitter.com/jusimen) and [GitHub](https://github.com/jusimen) for announcements
+- Create a 💬 [GitHub issue](https://github.com/jusimen/mergician/issues) for bug reports, feature requests, or questions
+- Add a ⭐️ [star on GitHub](https://github.com/jusimen/mergician) and 🐦 [tweet](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fjusimen%2Fmergician&hashtags=developers,frontend,javascript) to promote the project
 
 ## License
 
-This project is licensed under the [MIT license](https://github.com/jhildenbiddle/mergician/blob/main/LICENSE).
+This project is licensed under the [MIT license](https://github.com/jusimen/mergician/blob/main/LICENSE).
 
-Copyright (c) John Hildenbiddle ([@jhildenbiddle](https://twitter.com/jhildenbiddle))
+Copyright (c) Josue "Jusi" Monteiro ([@jusimen](https://twitter.com/jusimen))
