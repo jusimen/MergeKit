@@ -57,8 +57,7 @@
     "build": "tsc -p  tsconfig.prod.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "jest",
-    "test:prod": "jest --silent --coverage"
+    "test": "jest"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
