@@ -296,6 +296,10 @@ export function mergekit(
         else if (mergeVal instanceof Date) {
           mergeVal = new Date(mergeVal);
         }
+        // Buffers
+        else if (Buffer.isBuffer(mergeVal)) {
+          mergeVal = mergeVal.toString('utf-8');
+        }
         // Objects
         else if (
           isObject(mergeVal) &&

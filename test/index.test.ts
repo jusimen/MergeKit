@@ -1042,3 +1042,35 @@ describe('onlyObjectWithKeyValues', () => {
     ]);
   });
 });
+
+describe('Mergekit Buffers', () => {
+  test('merges buffer values correctly', () => {
+    const buffer1 = Buffer.from('Hello');
+    const buffer2 = Buffer.from('World');
+
+    const mergedObj = mergekit([{ a: buffer1 }, { b: buffer2 }]);
+
+    expect(mergedObj.a).toBe('Hello');
+    expect(mergedObj.b).toBe('World');
+  });
+
+  test('handles buffer values in an object', () => {
+    const buffer = Buffer.from('Test Buffer');
+    const obj = { a: buffer };
+
+    const mergedObj = mergekit(obj);
+
+    expect(mergedObj.a).toBe('Test Buffer');
+  });
+
+  test('merges buffer values with other types', () => {
+    const buffer = Buffer.from('Buffer');
+    const obj1 = { a: buffer };
+    const obj2 = { b: ' and String' };
+
+    const mergedObj = mergekit([obj1, obj2]);
+
+    expect(mergedObj.a).toBe('Buffer');
+    expect(mergedObj.b).toBe(' and String');
+  });
+});
