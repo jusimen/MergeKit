@@ -7,7 +7,7 @@ import {
   getObjectKeys,
   isObject,
   isPropDescriptor
-} from '../src/util.js';
+} from '../src/utils';
 
 const arr1 = ['a', 'b', 'c'];
 const arr2 = ['b', 'c', 'd'];

@@ -6,102 +6,15 @@ import {
   getObjectKeys,
   isObject,
   isPropDescriptor
-} from './util.js';
+} from './utils';
 
-/**
- * @typedef {Object} mergekitOptions
- * @property {string[]} [onlyKeys] - Exclusive array of keys to be merged
- * (others are skipped)
- * @property {string[]} [skipKeys] - Array of keys to skip (others are
- * merged)
- * @property {boolean} [onlyCommonKeys=false] - Merge only keys found
- * in multiple objects (ignore single occurrence keys)
- * @property {boolean} [onlyUniversalKeys=false] - Merge only keys
- * found in all objects
- * @property {boolean} [skipCommonKeys=false] - Skip keys found in
- * multiple objects (merge only single occurrence keys)
- * @property {boolean} [skipUniversalKeys=false] - Skip keys found in
- * all objects (merge only common keys)
- * @property {{key: string, value: any}[]} [onlyObjectWithKeyValues] - Merge only objects
- * that have the key and value pair
- * @property {boolean} [invokeGetters=false] - Invoke "getter" methods
- * and merge returned values
- * @property {boolean} [skipSetters=false] - Skip "setter" methods
- * during merge
- * @property {boolean} [appendArrays=false] - Merge array values at
- * the end of existing arrays
- * @property {boolean} [prependArrays=false] - Merge array values at
- * the beginning of existing arrays
- * @property {boolean} [dedupArrays=false] - Remove duplicate array
- * values in new merged object
- * @property {boolean|function} [sortArrays=false] - Sort array values
- * in new merged object
- * @property {boolean} [hoistEnumerable=false] - Merge enumerable
- * prototype properties as direct properties of merged object
- * @property {boolean} [hoistProto=false] - Merge custom prototype
- * properties as direct properties of merged object
- * @property {boolean} [skipProto=false] - Skip merging of custom
- * prototype properties
- * @property {filterCallback} [filter] - Callback used to conditionally merge
- * or skip a property. Return a "truthy" value to merge or a "falsy" value to
- * skip. Return no value to proceed according to other option values.
- * @property {beforeEachCallback} [beforeEach] - Callback used for
- * inspecting/modifying properties before merge. Return value is used as value
- * to merge.
- * @property {afterEachCallback} [afterEach] - Callback used for
- * inspecting/modifying properties after merge. Return value is used as merged
- * value.
- * @property {onCircularCallback} [onCircular] - Callback used for handling
- * circular object references during merge
- * @preserve
- */
+import type {
+  AfterEachCallbackData,
+  CallbackData,
+  MergekitOptions
+} from './types';
 
-/**
- * @callback filterCallback
- * @param {callbackData} callbackData
- * @preserve
- */
-
-/**
- * @callback beforeEachCallback
- * @param {callbackData} callbackData
- * @preserve
- */
-
-/**
- * @callback afterEachCallback
- * @param {afterEachCallbackData} callbackData
- * @preserve
- */
-
-/**
- * @callback onCircularCallback
- * @param {callbackData} callbackData
- * @preserve
- */
-
-/**
- * @typedef {Object} callbackData
- * @property {number} depth - Nesting level of the key being processed
- * @property {string} key - Object key being processed
- * @property {object} srcObj - Object containing the source value
- * @property {any} srcVal - Source object’s property value
- * @property {object} targetObj - New merged object
- * @property {any} targetVal - New merged object’s current property value
- * @preserve
- */
-
-/**
- * @typedef {Object} afterEachCallbackData
- * @property {number} depth - Nesting level of the key being processed
- * @property {string} key - Object key being processed
- * @property {any} mergeVal - New merged value
- * @property {object} srcObj - Object containing the source value
- * @property {object} targetObj - New merged object
- * @preserve
- */
-
-const defaults = {
+const defaults: MergekitOptions = {
   // Keys
   onlyKeys: [],
   skipKeys: [],
@@ -123,85 +36,19 @@ const defaults = {
   hoistProto: false,
   skipProto: false,
   // Callbacks
-  filter: Function.prototype,
-  beforeEach: Function.prototype,
-  afterEach: Function.prototype,
-  onCircular: Function.prototype,
+  filter: (callbackData: CallbackData) => true,
+  beforeEach: (callbackData: CallbackData) => {},
+  afterEach: (callbackData: AfterEachCallbackData) => {},
+  onCircular: (callbackData: CallbackData) => {},
   onlyObjectWithKeyValues: []
 };
 
-/**
- * @description Deep (recursive) object merging with support for descriptor
- * values, accessor functions, custom prototypes, and advanced options for
- * customizing the merge process.
- *
- * @example
- * // Custom merge options
- * const mergedObj = mergekit({
- *   // Options
- * })(obj1, obj2, obj3);
- *
- * // Custom merge function
- * const customMerge = mergekit({
- *   // Options
- * });
- * const customMergeObj = customMerge(obj1, obj2, obj3);
- *
- * @overload
- * @param {mergekitOptions} options
- * @returns {function} New merge function with options set as defaults
- * @preserve
- */
-/**
- * @description Deep (recursive) object merging with support for descriptor
- * values, accessor functions, custom prototypes, and advanced options for
- * customizing the merge process.
- *
- * @example
- * // Clone with default options
- * const clonedObj = mergekit({}, obj1);
- *
- * // Merge with default options
- * const mergedObj = mergekit(obj1, obj2, obj3);
- *
- * @overload
- * @param {...object} objects
- * @returns {object} New merged object
- * @preserve
- */
-/**
- * @description Deep (recursive) object merging with support for descriptor
- * values, accessor functions, custom prototypes, and advanced options for
- * customizing the merge process.
- *
- * @example
- * // Clone with default options
- * const clonedObj = mergekit({}, obj1);
- *
- * // Merge with default options
- * const mergedObj = mergekit(obj1, obj2, obj3);
- *
- * @example
- * // Custom merge options
- * const mergedObj = mergekit({
- *   // Options
- * })(obj1, obj2, obj3);
- *
- * // Custom merge function
- * const customMerge = mergekit({
- *   // Options
- * });
- * const customMergeObj = customMerge(obj1, obj2, obj3);
- *
- * @param {mergekitOptions} optionsOrObject
- * @param {...object} [objects]
- * @returns {function|object} New merge function with options set as defaults
- * (single argument) or new merged object (multiple arguments)
- * @preserve
- */
-export function mergekit(optionsOrObject, ...objects) {
-  const options = arguments.length === 1 ? arguments[0] : {};
+export function mergekit(
+  objects: object[] | object,
+  options: Partial<MergekitOptions> = defaults
+) {
   const settings = { ...defaults, ...options };
+
   const dedupArrayMap = new Map();
   const sortArrayMap = new Map();
   const sortArrayFn =
@@ -221,6 +68,13 @@ export function mergekit(optionsOrObject, ...objects) {
   function _mergekit(...objects) {
     let mergeKeyList;
 
+    /**
+     * If multiple objects are being merged, filter keys based on settings:
+     * - onlyCommonKeys: Only include keys that appear in multiple objects
+     * - onlyUniversalKeys: Only include keys that appear in all objects
+     * - skipCommonKeys: Skip keys that appear in multiple objects
+     * - skipUniversalKeys: Skip keys that appear in all objects
+     */
     if (objects.length > 1) {
       if (settings.onlyCommonKeys) {
         mergeKeyList = getInMultiple(
@@ -279,7 +133,7 @@ export function mergekit(optionsOrObject, ...objects) {
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         const targetVal = targetObj[key];
-        const mergeDescriptor = {
+        const mergeDescriptor: PropertyDescriptor = {
           configurable: true,
           enumerable: true
         };
@@ -482,13 +336,13 @@ export function mergekit(optionsOrObject, ...objects) {
           if (
             !settings.skipSetters &&
             typeof set === 'function' &&
-            !Object.hasOwnProperty.call(mergeDescriptor, 'value')
+            !('value' in mergeDescriptor)
           ) {
             mergeDescriptor.set = set;
           }
 
           // Set writable property if not accessors are defined
-          if (!mergeDescriptor.get && !mergeDescriptor.set) {
+          if (!('get' in mergeDescriptor) && !('set' in mergeDescriptor)) {
             mergeDescriptor.writable = Boolean(writable);
           }
         }
@@ -515,6 +369,7 @@ export function mergekit(optionsOrObject, ...objects) {
     for (const [obj, keyArray] of dedupArrayMap.entries()) {
       for (const key of keyArray) {
         const propDescriptor = Object.getOwnPropertyDescriptor(obj, key);
+        if (!propDescriptor) continue;
         const { configurable, enumerable, writable } = propDescriptor;
 
         let value = [...new Set(obj[key])];
@@ -522,7 +377,7 @@ export function mergekit(optionsOrObject, ...objects) {
         // Handle arrays of objects
         if (Array.isArray(obj[key]) && typeof obj[key][0] === 'object') {
           value = [...new Set(obj[key].map(item => JSON.stringify(item)))];
-          value = value.map(item => JSON.parse(item));
+          value = value.map(item => JSON.parse(item as string));
         }
 
         // Set static value to handle arrays received from srcObj getter
@@ -573,21 +428,6 @@ export function mergekit(optionsOrObject, ...objects) {
     return newObj;
   }
 
-  // With options
-  // Ex: mergekit({...})
-  if (arguments.length === 1) {
-    return function (...objects) {
-      // Options passed to custom merge function
-      if (arguments.length === 1) {
-        return mergekit({ ...settings, ...objects[0] });
-      } else {
-        return _mergekit(...objects);
-      }
-    };
-  }
-  // Without options
-  // Ex: mergekit(obj1, obj2);
-  else {
-    return _mergekit(...arguments);
-  }
+  const objectsArray = Array.isArray(objects) ? objects : [objects];
+  return _mergekit(...objectsArray);
 }

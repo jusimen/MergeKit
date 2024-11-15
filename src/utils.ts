@@ -4,15 +4,16 @@
  * @example
  * countOccurrences([1, 2], [2, 3]); // { 1: 1, 2: 2, 3: 1 }
  *
- * @param {...array} arrays - Arrays to be compared
- * @return {object} Array values and their occurrence count
+ * @param {...any[]} arrays - Arrays to be compared
+ * @return {Record<string, number>} Array values and their occurrence count
  */
-export function countOccurrences(...arrays) {
-  const countObj = {};
+export function countOccurrences(...arrays: any[][]): Record<string, number> {
+  const countObj: Record<string, number> = {};
 
   arrays.forEach(array => {
     array.forEach(v => {
-      countObj[v] = v in countObj ? ++countObj[v] : 1;
+      const key = String(v);
+      countObj[key] = key in countObj ? ++countObj[key] : 1;
     });
   });
 
@@ -27,12 +28,12 @@ export function countOccurrences(...arrays) {
  * getInAll([1, 2, 3], [2, 3, 4], [3, 4, 5]); // [3]
  * getInAll([1, 2, 3, 'x'], [2, 3, 4, 'x'], [3, 4, 5]); // [3]
  *
- * @param {...array} arrays - Arrays to be compared
- * @return {array} List of values
+ * @param {...any[]} arrays - Arrays to be compared
+ * @return {any[]} List of values
  */
-export function getInAll(...arrays) {
+export function getInAll(...arrays: any[][]): any[] {
   return arrays.reduce((acc, curr) =>
-    acc.filter(Set.prototype.has, new Set(curr))
+    acc.filter(value => new Set(curr).has(value))
   );
 }
 
@@ -44,13 +45,15 @@ export function getInAll(...arrays) {
  * getInMultiple([1, 2, 3], [2, 3, 4], [3, 4, 5]); // [2, 3, 4]
  * getInMultiple([1, 2, 3, 'x'], [2, 3, 4, 'x'], [3, 4, 5]); // [2, 3, 4, 'x']
  *
- * @param {...array} arrays - Arrays to be compared
- * @return {array} List of values
+ * @param {...any[]} arrays - Arrays to be compared
+ * @return {any[]} List of values
  */
-export function getInMultiple(...arrays) {
+export function getInMultiple(...arrays: any[][]): any[] {
   const countObj = countOccurrences(...arrays);
 
-  return Object.keys(countObj).filter(v => countObj[v] > 1);
+  return Object.keys(countObj)
+    .filter(v => countObj[v] > 1)
+    .map(key => parseValue(key));
 }
 
 /**
@@ -61,13 +64,15 @@ export function getInMultiple(...arrays) {
  * getNotInAll([1, 2, 3], [2, 3, 4], [3, 4, 5]); // [1, 2, 4, 5]
  * getNotInAll([1, 2, 3, 'x'], [2, 3, 4, 'x'], [3, 4, 5]); // [1, 2, 4, 5, 'x']
  *
- * @param {...array} arrays - Arrays to be compared
- * @return {array} List of values
+ * @param {...any[]} arrays - Arrays to be compared
+ * @return {any[]} List of values
  */
-export function getNotInAll(...arrays) {
+export function getNotInAll(...arrays: any[][]): any[] {
   const countObj = countOccurrences(...arrays);
 
-  return Object.keys(countObj).filter(v => countObj[v] < arrays.length);
+  return Object.keys(countObj)
+    .filter(v => countObj[v] < arrays.length)
+    .map(key => parseValue(key));
 }
 
 /**
@@ -78,13 +83,15 @@ export function getNotInAll(...arrays) {
  * getNotInMultiple([1, 2, 3], [2, 3, 4], [3, 4, 5]); // [1, 5]
  * getNotInMultiple([1, 2, 3, 'x'], [2, 3, 4, 'x'], [3, 4, 5]); // [1, 5]
  *
- * @param {...array} arrays - Arrays to be compared
- * @return {array} List of values
+ * @param {...any[]} arrays - Arrays to be compared
+ * @return {any[]} List of values
  */
-export function getNotInMultiple(...arrays) {
+export function getNotInMultiple(...arrays: any[][]): any[] {
   const countObj = countOccurrences(...arrays);
 
-  return Object.keys(countObj).filter(v => countObj[v] === 1);
+  return Object.keys(countObj)
+    .filter(v => countObj[v] === 1)
+    .map(key => parseValue(key));
 }
 
 /**
@@ -96,15 +103,20 @@ export function getNotInMultiple(...arrays) {
  * getObjectKeys({ a: 1 }, true); // ['a', 'b', 'c', ...]
  *
  * @param {object} obj - Object to parse
- * @param {boolean} hoistEnumerable include enumerable prototype properties
- * @return {array} List of keys
+ * @param {boolean} [hoistEnumerable=false] include enumerable prototype properties
+ * @return {string[]} List of keys
  */
-export function getObjectKeys(obj, hoistEnumerable = false) {
-  const keys = Object.getOwnPropertyNames(obj);
+export function getObjectKeys(
+  obj: object,
+  hoistEnumerable: boolean = false
+): string[] {
+  const keys: string[] = Object.getOwnPropertyNames(obj);
 
   if (hoistEnumerable) {
     for (const key in obj) {
-      !keys.includes(key) && keys.push(key);
+      if (!keys.includes(key)) {
+        keys.push(key);
+      }
     }
   }
 
@@ -114,10 +126,10 @@ export function getObjectKeys(obj, hoistEnumerable = false) {
 /**
  * Determines if the value passed was created using the Object constructor
  *
- * @param {*} obj - Value to test
+ * @param {*} value - Value to test
  * @return {boolean}
  */
-export function isObject(value) {
+export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
@@ -127,7 +139,7 @@ export function isObject(value) {
  * @param {*} obj - Value to test
  * @return {boolean}
  */
-export function isPropDescriptor(obj) {
+export function isPropDescriptor(obj: any): obj is PropertyDescriptor {
   if (!isObject(obj)) {
     return false;
   }
@@ -144,17 +156,32 @@ export function isPropDescriptor(obj) {
 
   // Test for invalid key(s)
   if (isDescriptor) {
-    const validKeys = [
+    const validKeys = new Set([
       'configurable',
       'get',
       'set',
       'enumerable',
       'value',
       'writable'
-    ];
+    ]);
 
-    isDescriptor = Object.keys(obj).some(key => !(key in validKeys));
+    isDescriptor = Object.keys(obj).every(key => validKeys.has(key));
   }
 
   return isDescriptor;
+}
+
+/**
+ * Helper function to parse string keys back to their original types.
+ * Note: This assumes that the original values can be correctly parsed from strings.
+ *
+ * @param key - The key to parse.
+ * @returns The parsed value.
+ */
+function parseValue(key: string): any {
+  try {
+    return JSON.parse(key);
+  } catch {
+    return key;
+  }
 }
