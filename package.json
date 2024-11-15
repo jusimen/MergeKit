@@ -46,12 +46,20 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/mergekit.cjs",
-  "module": "./dist/mergekit.esm.js",
-  "browser": "./dist/mergekit.esm.min.js",
-  "types": "./dist/mergekit.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "browser": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
+    "build": "rimraf dist && tsc",
     "test": "jest"
   },
   "devDependencies": {

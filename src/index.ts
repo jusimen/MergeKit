@@ -22,6 +22,7 @@ const defaults: MergekitOptions = {
   onlyUniversalKeys: false,
   skipCommonKeys: false,
   skipUniversalKeys: false,
+  onlyObjectWithKeyValues: [],
 
   // Values
   invokeGetters: false,
@@ -36,11 +37,7 @@ const defaults: MergekitOptions = {
   hoistProto: false,
   skipProto: false,
   // Callbacks
-  filter: (callbackData: CallbackData) => true,
-  beforeEach: (callbackData: CallbackData) => {},
-  afterEach: (callbackData: AfterEachCallbackData) => {},
-  onCircular: (callbackData: CallbackData) => {},
-  onlyObjectWithKeyValues: []
+  onCircular: () => {}
 };
 
 export function mergekit(
@@ -191,7 +188,11 @@ export function mergekit(
         }
 
         // Circular references
-        if (typeof mergeVal === 'object' && mergeVal !== null) {
+        if (
+          settings.onCircular &&
+          typeof mergeVal === 'object' &&
+          mergeVal !== null
+        ) {
           if (circularRefs.has(srcObj[key])) {
             const returnVal = settings.onCircular({
               depth: mergeDepth,
@@ -369,7 +370,6 @@ export function mergekit(
     for (const [obj, keyArray] of dedupArrayMap.entries()) {
       for (const key of keyArray) {
         const propDescriptor = Object.getOwnPropertyDescriptor(obj, key);
-        if (!propDescriptor) continue;
         const { configurable, enumerable, writable } = propDescriptor;
 
         let value = [...new Set(obj[key])];

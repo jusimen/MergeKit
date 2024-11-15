@@ -15,9 +15,9 @@ export interface MergekitOptions {
   hoistEnumerable: boolean; // Merge enumerable prototype properties as direct properties of merged object
   hoistProto: boolean; // Merge custom prototype properties as direct properties of merged object
   skipProto: boolean; // Skip merging of custom prototype properties
-  filter: (callbackData: CallbackData) => boolean | void; // Callback used to conditionally merge or skip a property
-  beforeEach: (callbackData: CallbackData) => any; // Callback used for inspecting/modifying properties before merge
-  afterEach: (callbackData: AfterEachCallbackData) => any; // Callback used for inspecting/modifying properties after merge
+  filter?: (callbackData: CallbackData) => boolean | void; // Callback used to conditionally merge or skip a property
+  beforeEach?: (callbackData: CallbackData) => any; // Callback used for inspecting/modifying properties before merge
+  afterEach?: (callbackData: AfterEachCallbackData) => any; // Callback used for inspecting/modifying properties after merge
   onCircular: (callbackData: CallbackData) => any; // Callback used for handling circular object references during merge
 }
 
