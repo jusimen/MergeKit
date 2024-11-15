@@ -36,6 +36,38 @@ const defaults: MergekitOptions = {
   onCircular: () => {}
 };
 
+/**
+ * Merges multiple objects into one, with various options for customization.
+ *
+ * @param {object[] | object} objects - The objects to be merged. Can be a single object or an array of objects.
+ * @param {Partial<MergekitOptions>} [options=defaults] - Optional settings to customize the merge behavior.
+ * @returns {object} - The merged object.
+ *
+ * @example
+ * // Basic usage
+ * const obj1 = { a: 1, b: 2 };
+ * const obj2 = { b: 3, c: 4 };
+ * const result = mergekit([obj1, obj2]);
+ * // result: { a: 1, b: 3, c: 4 }
+ *
+ * @example
+ * // Using options
+ * const obj1 = { a: 1, b: 2 };
+ * const obj2 = { b: 3, c: 4 };
+ * const options = { onlyCommonKeys: true };
+ * const result = mergekit([obj1, obj2], options);
+ * // result: { b: 3 }
+ *
+ * @example
+ * // Merging with custom prototype properties
+ * function CustomProto() {}
+ * CustomProto.prototype.customMethod = function() { return 'custom'; };
+ * const obj1 = new CustomProto();
+ * obj1.a = 1;
+ * const obj2 = { b: 2 };
+ * const result = mergekit([obj1, obj2]);
+ * // result: { a: 1, b: 2, customMethod: [Function] }
+ */
 export function mergekit(
   objects: object[] | object,
   options: Partial<MergekitOptions> = defaults
