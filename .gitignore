@@ -10,6 +10,3 @@ node_modules
 ._*
 .cache
 .DS_Store
-
-# Jest
-__snapshots__
