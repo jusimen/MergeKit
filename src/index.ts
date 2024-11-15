@@ -8,11 +8,7 @@ import {
   isPropDescriptor
 } from './utils';
 
-import type {
-  AfterEachCallbackData,
-  CallbackData,
-  MergekitOptions
-} from './types';
+import type { MergekitOptions } from './types';
 
 const defaults: MergekitOptions = {
   // Keys
@@ -315,7 +311,6 @@ export function mergekit(
         }
 
         if (srcDescriptor) {
-          // eslint-disable-next-line no-unused-vars
           const { configurable, enumerable, get, set, writable } =
             srcDescriptor;
 
