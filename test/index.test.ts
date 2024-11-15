@@ -1,5 +1,6 @@
 import { isObject } from '../src/utils';
 import { mergekit } from '../src/index';
+import { CallbackData } from '../src/types';
 
 // Test Objects
 // ============================================================================
@@ -501,12 +502,9 @@ describe('Options', () => {
     test('sortArrays with function', () => {
       const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         appendArrays: true,
-        sortArrays(a, b) {
-          if (typeof b === 'number') {
-            return b - a;
-          } else {
-            return -1;
-          }
+        // Start of Selection
+        sortArrays(a: number, b: number) {
+          return b - a;
         }
       });
 
@@ -536,15 +534,22 @@ describe('Options', () => {
     const testObj2 = { a: 2, b: { c: 'bar' } };
 
     test('filter() arguments', () => {
-      const conditionsTested = [];
+      // Start of Selection
+      const conditionsTested: string[] = [];
       const mergedObj = mergekit([testObj1, testObj2], {
-        filter({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
+        filter({
+          depth,
+          key,
+          srcObj,
+          srcVal,
+          targetObj,
+          targetVal
+        }: CallbackData): boolean | void {
           expect(isObject(srcObj)).toBe(true);
           expect(typeof key).toBe('string');
           expect(isObject(targetObj)).toBe(true);
           expect(typeof depth).toBe('number');
 
-          /* eslint-disable jest/no-conditional-expect */
           if (srcVal === 1) {
             expect(key).toBe('a');
             conditionsTested.push('srcVal/key');
@@ -561,7 +566,6 @@ describe('Options', () => {
             expect(depth).toBe(1);
             conditionsTested.push('depth:1');
           }
-          /* eslint-enable jest/no-conditional-expect */
 
           return srcVal;
         }
@@ -612,7 +616,6 @@ describe('Options', () => {
           expect(isObject(srcObj)).toBe(true);
           expect(isObject(targetObj)).toBe(true);
 
-          /* eslint-disable jest/no-conditional-expect */
           if (srcVal === 1) {
             expect(key).toBe('a');
             conditionsTested.push('srcVal/key');
@@ -629,7 +632,6 @@ describe('Options', () => {
             expect(depth).toBe(1);
             conditionsTested.push('depth:1');
           }
-          /* eslint-enable jest/no-conditional-expect */
 
           return srcVal;
         }
@@ -669,7 +671,6 @@ describe('Options', () => {
           expect(typeof key).toBe('string');
           expect(isObject(targetObj)).toBe(true);
 
-          /* eslint-disable jest/no-conditional-expect */
           if (mergeVal === 2) {
             expect(key).toBe('a');
             conditionsTested.push('mergeVal/key');
@@ -684,8 +685,6 @@ describe('Options', () => {
             expect(depth).toBe(1);
             conditionsTested.push('depth:1');
           }
-          /* eslint-enable jest/no-conditional-expect */
-
           return mergeVal;
         }
       });
@@ -714,7 +713,7 @@ describe('Options', () => {
 
     test('onCircular() arguments', () => {
       const mergedObj = mergekit([{}, testObjCircular], {
-        onCircular({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
+        onCircular({ depth, key, srcObj, srcVal, targetObj }) {
           expect(typeof depth).toBe('number');
           expect(typeof key).toBe('string');
           expect(isObject(srcObj)).toBe(true);
