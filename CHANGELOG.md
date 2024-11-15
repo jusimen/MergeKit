@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.0
+
+_2024-11-15_
+
+- ❗️ Breaking: Switch to TypeScript
+- ❗️ Breaking: Changed parameters
+
 ## 2.0.3
 
 _2024-11-12_

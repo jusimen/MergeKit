@@ -1,5 +1,6 @@
-import { isObject } from '../src/util.js';
-import { mergekit } from '../src/index.js';
+import { isObject } from '../src/utils';
+import { mergekit } from '../src/index';
+import { CallbackData } from '../src/types';
 
 // Test Objects
 // ============================================================================
@@ -60,7 +61,7 @@ const testPerson = Object.create(
 describe('Clone', () => {
   test('arrays', () => {
     const testObj = { a: [1, 1] };
-    const mergedObj = mergekit({}, testObj);
+    const mergedObj = mergekit(testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -70,7 +71,7 @@ describe('Clone', () => {
 
   test('dates', () => {
     const testObj = { a: new Date() };
-    const mergedObj = mergekit({}, testObj);
+    const mergedObj = mergekit(testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -80,7 +81,7 @@ describe('Clone', () => {
 
   test('object literals', () => {
     const testObj = { a: { b: 1 } };
-    const mergedObj = mergekit({}, testObj);
+    const mergedObj = mergekit(testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -90,7 +91,7 @@ describe('Clone', () => {
 
   test('falsey values', () => {
     const testObj = { a: null, b: undefined, c: '', d: 0, e: false };
-    const mergedObj = mergekit({}, testObj);
+    const mergedObj = mergekit(testObj);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testObj);
 
@@ -98,7 +99,7 @@ describe('Clone', () => {
   });
 
   test('own properties', () => {
-    const mergedObj = mergekit({}, testPerson);
+    const mergedObj = mergekit(testPerson);
     const mergedDescriptors = Object.getOwnPropertyDescriptors(mergedObj);
     const testDescriptors = Object.getOwnPropertyDescriptors(testPerson);
 
@@ -106,7 +107,7 @@ describe('Clone', () => {
   });
 
   test('custom prototype properties', () => {
-    const mergedObj = mergekit({}, testPerson);
+    const mergedObj = mergekit(testPerson);
     const mergedProto = Object.getPrototypeOf(mergedObj);
     const mergedProtoDescriptors =
       Object.getOwnPropertyDescriptors(mergedProto);
@@ -117,7 +118,7 @@ describe('Clone', () => {
   });
 
   test('circular object', () => {
-    const mergedObj = mergekit({}, testObjCircular);
+    const mergedObj = mergekit(testObjCircular);
 
     expect(mergedObj.a).toBe(1);
     expect(mergedObj.circular.a).toBe(1);
@@ -128,7 +129,7 @@ describe('Clone', () => {
 
 describe('Merge', () => {
   test('deep two objects', () => {
-    const mergedObj = mergekit(testObj1, testObj2);
+    const mergedObj = mergekit([testObj1, testObj2]);
 
     expect(mergedObj.b).not.toBe(testObj2.b);
     expect(mergedObj.c).not.toBe(testObj2.c);
@@ -136,7 +137,7 @@ describe('Merge', () => {
   });
 
   test('deep three objects', () => {
-    const mergedObj = mergekit(testObj1, testObj2, testObj3);
+    const mergedObj = mergekit([testObj1, testObj2, testObj3]);
 
     expect(mergedObj).toMatchSnapshot();
   });
@@ -158,7 +159,7 @@ describe('Merge', () => {
       },
       Object.getOwnPropertyDescriptors({ bar: true })
     );
-    const mergedObj = mergekit(testObj1, testObj2);
+    const mergedObj = mergekit([testObj1, testObj2]);
 
     expect(mergedObj).toHaveProperty('foo');
     expect(mergedObj).toHaveProperty('bar');
@@ -168,146 +169,140 @@ describe('Merge', () => {
 });
 
 describe('Options', () => {
-  test('passing options returns custom merge function', () => {
-    const customMerge = mergekit({}); // Defaults
-
-    expect(typeof customMerge).toBe('function');
-  });
-
   describe('Keys', () => {
     test('onlyKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyKeys: ['a', 'c', 'x']
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('skipKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         skipKeys: ['a', 'x']
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onlyKeys + skipKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyKeys: ['a', 'b'],
         skipKeys: ['b']
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onlyCommonKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyCommonKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onlyCommonKeys + onlyKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyKeys: ['b', 'c', 'x', 'z'],
         onlyCommonKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onlyCommonKeys + skipKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         skipKeys: ['a', 'z'],
         onlyCommonKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onlyUniversalKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyUniversalKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onlyUniversalKeys + onlyKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyKeys: ['a'],
         onlyUniversalKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onlyUniversalKeys + skipKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         skipKeys: ['a'],
         onlyUniversalKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('skipCommonKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         skipCommonKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('skipCommonKeys + onlyKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyKeys: ['d'],
         skipCommonKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('skipCommonKeys + skipKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         skipKeys: ['d'],
         skipCommonKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('skipUniversalKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         skipUniversalKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('skipUniversalKeys + onlyKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         onlyKeys: ['d'],
         skipUniversalKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('skipUniversalKeys + skipKeys', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         skipKeys: ['c'],
         skipUniversalKeys: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('hoistEnumerable = false', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         hoistEnumerable: false
-      })({}, testPerson);
+      });
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
       const testNames = Object.getOwnPropertyNames(testPerson);
 
@@ -316,9 +311,9 @@ describe('Options', () => {
     });
 
     test('hoistEnumerable = true', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         hoistEnumerable: true
-      })({}, testPerson);
+      });
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
       const testPropNames = Object.getOwnPropertyNames(testPerson);
       const testProtoPropNames = Object.keys(Object.getPrototypeOf(testPerson));
@@ -329,9 +324,9 @@ describe('Options', () => {
     });
 
     test('hoistProto = false', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         hoistProto: false
-      })({}, testPerson);
+      });
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
       const testNames = Object.getOwnPropertyNames(testPerson);
 
@@ -340,9 +335,9 @@ describe('Options', () => {
     });
 
     test('hoistProto = true', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         hoistProto: true
-      })({}, testPerson);
+      });
       const mergedNames = Object.getOwnPropertyNames(mergedObj);
       const testPropNames = Object.getOwnPropertyNames(testPerson);
       const testProtoPropNames = Object.getOwnPropertyNames(
@@ -355,9 +350,9 @@ describe('Options', () => {
     });
 
     test('skipProto = false', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         skipProto: false
-      })({}, testPerson);
+      });
       const mergedProto = Object.getPrototypeOf(mergedObj);
       const mergedProtoDescriptors =
         Object.getOwnPropertyDescriptors(mergedProto);
@@ -368,9 +363,9 @@ describe('Options', () => {
     });
 
     test('skipProto = true', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         skipProto: true
-      })({}, testPerson);
+      });
       const mergedProto = Object.getPrototypeOf(mergedObj);
 
       expect(mergedProto).toMatchObject(Object.prototype);
@@ -379,9 +374,9 @@ describe('Options', () => {
 
   describe('Values', () => {
     test('invokeGetters = false', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         invokeGetters: false
-      })({}, testPerson);
+      });
       const getterDescriptor = Object.getOwnPropertyDescriptor(
         mergedObj,
         'fullName'
@@ -392,9 +387,9 @@ describe('Options', () => {
     });
 
     test('invokeGetters = true', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         invokeGetters: true
-      })({}, testPerson);
+      });
       const getterDescriptor = Object.getOwnPropertyDescriptor(
         mergedObj,
         'fullName'
@@ -406,9 +401,9 @@ describe('Options', () => {
     });
 
     test('skipSetters = false', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         skipSetters: false
-      })({}, testPerson);
+      });
       const setterDescriptor = Object.getOwnPropertyDescriptor(
         mergedObj,
         'fullName'
@@ -422,9 +417,9 @@ describe('Options', () => {
     });
 
     test('skipSetters = true', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         skipSetters: true
-      })({}, testPerson);
+      });
       const setterDescriptor = Object.getOwnPropertyDescriptor(
         mergedObj,
         'fullName'
@@ -441,80 +436,77 @@ describe('Options', () => {
     const testObj3 = { a: [3, 3], b: [3, [3, 3]], c: { d: [3, 3, '😀'] } };
 
     test('appendArrays', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         appendArrays: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('prependArrays', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         prependArrays: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('dedupArrays', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testObj2], {
         appendArrays: true,
         dedupArrays: true
-      })({}, testObj2);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('dedupArrays + appendArrays', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         appendArrays: true,
         dedupArrays: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('dedupArrays + prependArrays', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         prependArrays: true,
         dedupArrays: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('dedupArrays + afterEach (mergeVal should be deduped)', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{ test: [1, 1] }, { test: [1, 1] }], {
         appendArrays: true,
         dedupArrays: true,
         afterEach({ mergeVal }) {
           expect(mergeVal).toHaveLength(1);
         }
-      })({ test: [1, 1] }, { test: [1, 1] });
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('sortArrays with boolean', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         appendArrays: true,
         sortArrays: true
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('sortArrays with function', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2, testObj3], {
         appendArrays: true,
-        sortArrays(a, b) {
-          if (typeof b === 'number') {
-            return b - a;
-          } else {
-            return -1;
-          }
+        // Start of Selection
+        sortArrays(a: number, b: number) {
+          return b - a;
         }
-      })(testObj1, testObj2, testObj3);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
@@ -525,13 +517,13 @@ describe('Options', () => {
         [3, 4],
         [1, 2, 3, 4]
       ];
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{ test: [2, 1] }, { test: [4, 3] }], {
         appendArrays: true,
         sortArrays: true,
         afterEach({ mergeVal }) {
           expect(sortedArrays).toContainEqual(mergeVal);
         }
-      })({ test: [2, 1] }, { test: [4, 3] });
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
@@ -542,15 +534,22 @@ describe('Options', () => {
     const testObj2 = { a: 2, b: { c: 'bar' } };
 
     test('filter() arguments', () => {
-      const conditionsTested = [];
-      const mergedObj = mergekit({
-        filter({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
+      // Start of Selection
+      const conditionsTested: string[] = [];
+      const mergedObj = mergekit([testObj1, testObj2], {
+        filter({
+          depth,
+          key,
+          srcObj,
+          srcVal,
+          targetObj,
+          targetVal
+        }: CallbackData): boolean | void {
           expect(isObject(srcObj)).toBe(true);
           expect(typeof key).toBe('string');
           expect(isObject(targetObj)).toBe(true);
           expect(typeof depth).toBe('number');
 
-          /* eslint-disable jest/no-conditional-expect */
           if (srcVal === 1) {
             expect(key).toBe('a');
             conditionsTested.push('srcVal/key');
@@ -567,40 +566,39 @@ describe('Options', () => {
             expect(depth).toBe(1);
             conditionsTested.push('depth:1');
           }
-          /* eslint-enable jest/no-conditional-expect */
 
           return srcVal;
         }
-      })(testObj1, testObj2);
+      });
 
       expect(conditionsTested).toHaveLength(4);
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('filter() true', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         filter({ key }) {
           return key === 'a';
         }
-      })(testObj1, testObj2);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('filter() false', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         filter({ key }) {
           return key !== 'a';
         }
-      })(testObj1, testObj2);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('filter() without return value', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         filter() {}
-      })(testObj1, testObj2);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
@@ -611,14 +609,13 @@ describe('Options', () => {
 
       const conditionsTested = [];
 
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         beforeEach({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
           expect(typeof depth).toBe('number');
           expect(typeof key).toBe('string');
           expect(isObject(srcObj)).toBe(true);
           expect(isObject(targetObj)).toBe(true);
 
-          /* eslint-disable jest/no-conditional-expect */
           if (srcVal === 1) {
             expect(key).toBe('a');
             conditionsTested.push('srcVal/key');
@@ -635,30 +632,29 @@ describe('Options', () => {
             expect(depth).toBe(1);
             conditionsTested.push('depth:1');
           }
-          /* eslint-enable jest/no-conditional-expect */
 
           return srcVal;
         }
-      })(testObj1, testObj2);
+      });
 
       expect(conditionsTested).toHaveLength(4);
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('beforeEach() with return value', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testPerson], {
         beforeEach() {
           return 'baz';
         }
-      })({}, testPerson);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('beforeEach() without return value', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         beforeEach() {}
-      })(testObj1, testObj2);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
@@ -669,13 +665,12 @@ describe('Options', () => {
 
       const conditionsTested = [];
 
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         afterEach({ depth, key, mergeVal, srcObj, targetObj }) {
           expect(typeof depth).toBe('number');
           expect(typeof key).toBe('string');
           expect(isObject(targetObj)).toBe(true);
 
-          /* eslint-disable jest/no-conditional-expect */
           if (mergeVal === 2) {
             expect(key).toBe('a');
             conditionsTested.push('mergeVal/key');
@@ -690,37 +685,35 @@ describe('Options', () => {
             expect(depth).toBe(1);
             conditionsTested.push('depth:1');
           }
-          /* eslint-enable jest/no-conditional-expect */
-
           return mergeVal;
         }
-      })(testObj1, testObj2);
+      });
 
       expect(conditionsTested).toHaveLength(4);
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('afterEach() return value', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         afterEach() {
           return 'baz';
         }
-      })(testObj1, testObj2);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('afterEach() without return value', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([testObj1, testObj2], {
         afterEach() {}
-      })(testObj1, testObj2);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onCircular() arguments', () => {
-      const mergedObj = mergekit({
-        onCircular({ depth, key, srcObj, srcVal, targetObj, targetVal }) {
+      const mergedObj = mergekit([{}, testObjCircular], {
+        onCircular({ depth, key, srcObj, srcVal, targetObj }) {
           expect(typeof depth).toBe('number');
           expect(typeof key).toBe('string');
           expect(isObject(srcObj)).toBe(true);
@@ -728,15 +721,15 @@ describe('Options', () => {
           expect(srcVal).toBe(srcObj);
           expect(isObject(targetObj)).toBe(true);
         }
-      })({}, testObjCircular);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
 
     test('onCircular() without return value', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testObjCircular], {
         onCircular() {}
-      })({}, testObjCircular);
+      });
 
       expect(mergedObj).toMatchSnapshot();
       expect(mergedObj.a).toBe(1);
@@ -745,30 +738,14 @@ describe('Options', () => {
     });
 
     test('onCircular() with return value', () => {
-      const mergedObj = mergekit({
+      const mergedObj = mergekit([{}, testObjCircular], {
         onCircular() {
           return true;
         }
-      })({}, testObjCircular);
+      });
 
       expect(mergedObj).toMatchSnapshot();
     });
-  });
-
-  test('custom merge function accepts options', () => {
-    const customMerge1 = mergekit({ onlyKeys: ['b'], appendArrays: true });
-
-    expect(typeof customMerge1).toBe('function');
-
-    const customMerge2 = customMerge1({ dedupArrays: true });
-
-    expect(typeof customMerge2).toBe('function');
-
-    const mergedObj1 = customMerge1(testObj1, testObj2, testObj3);
-    const mergedObj2 = customMerge2(testObj1, testObj2, testObj3);
-
-    expect(mergedObj1).toMatchSnapshot();
-    expect(mergedObj2).toMatchSnapshot();
   });
 });
 
@@ -786,7 +763,7 @@ describe('Accessors', () => {
         return 'bar';
       }
     };
-    const mergedObj = mergekit(obj1, obj2);
+    const mergedObj = mergekit([obj1, obj2]);
     const getDescriptor = Object.getOwnPropertyDescriptor(mergedObj, 'getVal');
 
     expect(typeof mergedObj.a).toBe('number');
@@ -808,7 +785,7 @@ describe('Accessors', () => {
         this.a = val;
       }
     };
-    const mergedObj = mergekit(obj1, obj2);
+    const mergedObj = mergekit([obj1, obj2]);
     const setDescriptor = Object.getOwnPropertyDescriptor(mergedObj, 'setVal');
 
     expect(typeof mergedObj.a).toBe('number');
@@ -835,10 +812,10 @@ describe('Accessors', () => {
         this.a = [val, val];
       }
     };
-    const mergedObj = mergekit({
+    const mergedObj = mergekit([obj1, obj2], {
       appendArrays: true,
       dedupArrays: true
-    })(obj1, obj2);
+    });
 
     // Getter
     expect(Array.isArray(mergedObj.getVal)).toBe(true);
@@ -872,7 +849,7 @@ describe('Accessors', () => {
         this.a = { x: 4 };
       }
     };
-    const mergedObj = mergekit(obj1, obj2);
+    const mergedObj = mergekit([obj1, obj2]);
 
     // Getter
     expect(isObject(mergedObj.getVal)).toBe(true);
@@ -889,7 +866,7 @@ describe('Accessors', () => {
 
   test('handles getter/setter return objects from callbacks', () => {
     const obj1 = { a: 1, b: 1, c: 1, d: 1 };
-    const mergedObj = mergekit({
+    const mergedObj = mergekit([obj1], {
       beforeEach({ key }) {
         if (key === 'a') {
           return {
@@ -932,7 +909,7 @@ describe('Accessors', () => {
           };
         }
       }
-    })({}, obj1);
+    });
     const aDescriptor = Object.getOwnPropertyDescriptor(mergedObj, 'a');
     const cDescriptor = Object.getOwnPropertyDescriptor(mergedObj, 'c');
 
@@ -981,10 +958,10 @@ describe('Handle arrays of objects', () => {
       ]
     };
 
-    const mergedObj = mergekit({
+    const mergedObj = mergekit([obj1, obj2], {
       dedupArrays: true,
       appendArrays: true
-    })(obj1, obj2);
+    });
 
     expect(mergedObj.a).toHaveLength(3); // Expecting 3 unique objects
     expect(mergedObj.a).toEqual([
@@ -1002,7 +979,7 @@ describe('Handle arrays of objects', () => {
       a: [{ id: 1, name: 'Alice' }]
     };
 
-    const mergedObj = mergekit({ appendArrays: true })(obj1, obj2);
+    const mergedObj = mergekit([obj1, obj2], { appendArrays: true });
 
     expect(mergedObj.a).toHaveLength(1); // Expecting 1 object
     expect(mergedObj.a).toEqual([{ id: 1, name: 'Alice' }]);
@@ -1016,7 +993,7 @@ describe('Handle arrays of objects', () => {
       a: [4, 5, 6]
     };
 
-    const mergedObj = mergekit({ appendArrays: true })(obj1, obj2);
+    const mergedObj = mergekit([obj1, obj2], { appendArrays: true });
 
     expect(mergedObj.a).toHaveLength(6); // Expecting all values to be included
     expect(mergedObj.a).toEqual([1, 2, 3, 4, 5, 6]);
@@ -1047,14 +1024,14 @@ describe('onlyObjectWithKeyValues', () => {
       }
     ];
 
-    const mergedObj = mergekit({
+    const mergedObj = mergekit(objs, {
       dedupArrays: true,
       appendArrays: true,
       onlyObjectWithKeyValues: [
         { key: 'domain', value: 'movies' },
         { key: 'action', value: 'read' }
       ]
-    })(...objs);
+    });
 
     expect(mergedObj.id).not.toBe('9999');
     expect(mergedObj.action).toBe('read');

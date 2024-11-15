@@ -311,12 +311,12 @@ exports[`Options Arrays sortArrays with function 1`] = `
     1,
   ],
   "b": [
-    3,
     2,
     [
       2,
       2,
     ],
+    3,
     [
       3,
       3,
@@ -324,11 +324,11 @@ exports[`Options Arrays sortArrays with function 1`] = `
   ],
   "c": {
     "d": [
-      3,
-      3,
       2,
       2,
       "😀",
+      3,
+      3,
       "😀",
     ],
   },
@@ -611,28 +611,5 @@ exports[`Options Keys skipUniversalKeys 1`] = `
 {
   "d": true,
   "e": null,
-}
-`;
-
-exports[`Options custom merge function accepts options 1`] = `
-{
-  "b": [
-    1,
-    1,
-    2,
-    2,
-    3,
-    3,
-  ],
-}
-`;
-
-exports[`Options custom merge function accepts options 2`] = `
-{
-  "b": [
-    1,
-    2,
-    3,
-  ],
 }
 `;

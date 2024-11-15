@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
@@ -10,5 +10,11 @@ export default {
       statements: 100
     }
   },
-  transform: {}
+  moduleDirectories: ['node_modules', 'src'], // So Jest can resolve modules
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@test/(.*)$': '<rootDir>/test/$1'
+  },
+  preset: 'ts-jest',
+  testEnvironment: 'node'
 };
