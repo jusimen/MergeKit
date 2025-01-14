@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Uniquely flexible and light-weight utility for cloning and deep (recursive) merging of JavaScript objects. Supports descriptor values, accessor functions, and custom prototypes. Provides advanced options for customizing the clone/merge process.",
   "author": "Josue Monteiro",
   "license": "MIT",
