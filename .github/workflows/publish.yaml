@@ -28,6 +28,9 @@ jobs:
       - name: Build package
         run: npm run build
 
+      - name: Validate package
+        run: npx --yes @arethetypeswrong/cli --pack .
+
       - name: Publish package to NPM
         run: npm publish
         env:
